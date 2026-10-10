@@ -110,7 +110,7 @@ export const ProfileView: React.FC = () => {
           </p>
         </div>
 
-        {/* Database Sync Status Trigger */}
+        {/* Account / Sign In Trigger */}
         <button
           onClick={() => {
             if (!user) setAuthModalOpen(true);
@@ -118,8 +118,12 @@ export const ProfileView: React.FC = () => {
           }}
           className="flex items-center gap-2 px-4 py-2 rounded-xl bg-[#090d24] border border-[#a78bfa]/30 text-xs text-slate-300 hover:text-white hover:border-[#c4b5fd] transition-all cursor-pointer font-sans"
         >
-          <Database className="w-3.5 h-3.5 text-[#c4b5fd]" />
-          <span>{user ? 'Account Settings' : 'Sync to Cloud'}</span>
+          {user ? (
+            <Database className="w-3.5 h-3.5 text-[#c4b5fd]" />
+          ) : (
+            <User className="w-3.5 h-3.5 text-[#fef08a]" />
+          )}
+          <span>{user ? 'Account Settings' : 'Sign In'}</span>
         </button>
       </div>
 

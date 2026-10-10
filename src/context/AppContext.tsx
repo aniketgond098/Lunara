@@ -34,6 +34,7 @@ import {
 import { soundFX } from '../utils/audio';
 import { supabase, isSupabaseConfigured, hasSecretKeyConfigured } from '../lib/supabase';
 import { supabaseService } from '../services/supabaseService';
+import { authService } from '../services/authService';
 
 const STORAGE_KEYS = {
   PROFILE: 'web_ascend_profile_v2',
@@ -607,7 +608,22 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     async (newUser: any) => {
       if (newUser) {
         setUser(newUser);
-        await loadCloudData(newUser.id);
+        if (newUser.user_metadata?.username) {
+          setProfile((prev) => ({
+            ...prev,
+            username: newUser.user_metadata.username,
+          }));
+        }
+        if (isSupabaseConfigured()) {
+          try {
+            await loadCloudData(newUser.id);
+          } catch (err) {
+            console.warn('Notice: continuing with local data persistence:', err);
+            setSyncStatus('SYNCED');
+          }
+        } else {
+          setSyncStatus('SYNCED');
+        }
       } else {
         setUser(null);
         setSyncStatus('LOCAL');
@@ -616,28 +632,33 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     [loadCloudData]
   );
 
-  // Initialize Supabase Auth Listener (re-runs when configVersion changes)
+  // Initialize Auth Listener & Session (re-runs when configVersion changes)
   useEffect(() => {
     let isMounted = true;
 
     async function initAuth() {
       setAuthLoading(true);
 
-      // Guard: if Supabase is unconfigured or blocked due to a secret key, stay in local mode safely
-      if (!isSupabaseConfigured()) {
-        if (isMounted) {
-          setUser(null);
-          setSyncStatus('LOCAL');
-          setAuthLoading(false);
-        }
-        return;
-      }
-
       try {
-        const { data: { session } } = await supabase.auth.getSession();
-        if (session?.user && isMounted) {
-          setUser(session.user);
-          await loadCloudData(session.user.id);
+        const currentUser = await authService.getCurrentUser();
+        if (currentUser && isMounted) {
+          setUser(currentUser);
+          if (currentUser.user_metadata?.username) {
+            setProfile((prev) => ({
+              ...prev,
+              username: currentUser.user_metadata.username,
+            }));
+          }
+          if (isSupabaseConfigured()) {
+            try {
+              await loadCloudData(currentUser.id);
+            } catch (err) {
+              console.warn('Notice: continuing with local state cache:', err);
+              setSyncStatus('SYNCED');
+            }
+          } else {
+            setSyncStatus('SYNCED');
+          }
         } else if (isMounted) {
           setUser(null);
           setSyncStatus('LOCAL');
@@ -654,7 +675,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
 
       if (!isSupabaseConfigured()) return;
 
-      // Listen to auth state updates on the active client instance
+      // Listen to auth state updates on the active Supabase client instance
       const { data: { subscription } } = supabase.auth.onAuthStateChange(
         async (event, session) => {
           if (!isMounted) return;
@@ -662,9 +683,9 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
             setUser(session.user);
             await loadCloudData(session.user.id);
           } else if (event === 'SIGNED_OUT') {
+            await authService.signOut();
             setUser(null);
             setSyncStatus('LOCAL');
-            setProfile(createDefaultProfile(todayDate));
           }
         }
       );
@@ -679,7 +700,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     return () => {
       isMounted = false;
     };
-  }, [loadCloudData, todayDate, configVersion]);
+  }, [loadCloudData, configVersion]);
 
   // Periodic or focus synchronization (throttled to avoid race conditions with local clicks/toggles)
   useEffect(() => {
@@ -730,15 +751,14 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   // Sign out handler
   const signOut = useCallback(async () => {
     try {
-      await supabase.auth.signOut();
+      await authService.signOut();
       setUser(null);
       setSyncStatus('LOCAL');
-      setProfile(createDefaultProfile(todayDate));
       setAccountModalOpen(false);
     } catch (err) {
       console.error('Sign out error:', err);
     }
-  }, [todayDate]);
+  }, []);
 
   // Local data migration to Supabase
   const importLocalDataToCloud = useCallback(async () => {

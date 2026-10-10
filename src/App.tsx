@@ -111,42 +111,6 @@ const MainLayout: React.FC = () => {
           {/* Top Celestial Header */}
           <Header />
 
-          {/* Warning Banner if Secret API Key was configured */}
-          {hasSecretKeyError && (
-            <div className="bg-[#450a0a]/90 border-b border-rose-500/50 px-4 sm:px-8 py-2.5 flex flex-wrap items-center justify-between text-xs text-rose-200 gap-2">
-              <div className="flex items-center gap-2">
-                <AlertTriangle className="w-4 h-4 text-rose-400 shrink-0 animate-pulse" />
-                <span>
-                  <strong>SECRET KEY CONFLICT:</strong> A Supabase <code className="bg-black/50 px-1 py-0.5 rounded text-rose-300 font-bold">service_role</code> secret key was detected. Secret keys are blocked in browsers for security.
-                </span>
-              </div>
-              <button
-                onClick={() => setSupabaseConfigModalOpen(true)}
-                className="px-3 py-1 rounded-lg bg-rose-600 hover:bg-rose-500 text-white font-bold text-[10px] uppercase tracking-wider transition-colors shrink-0 cursor-pointer"
-              >
-                Replace with Anon Key
-              </button>
-            </div>
-          )}
-
-          {/* Warning Banner if Supabase tables are missing */}
-          {isMissingTablesError && !hasSecretKeyError && (
-            <div className="bg-amber-950/90 border-b border-amber-500/50 px-4 sm:px-8 py-2.5 flex flex-wrap items-center justify-between text-xs text-amber-200 gap-2">
-              <div className="flex items-center gap-2">
-                <Database className="w-4 h-4 text-amber-400 shrink-0 animate-pulse" />
-                <span>
-                  <strong>SUPABASE TABLES NOT FOUND:</strong> Connected to Supabase, but database tables (<code className="bg-black/50 px-1 py-0.5 rounded text-amber-300 font-bold">public.profiles</code>) must be created in SQL Editor.
-                </span>
-              </div>
-              <button
-                onClick={() => setSupabaseConfigModalOpen(true)}
-                className="px-3 py-1 rounded-lg bg-amber-600 hover:bg-amber-500 text-white font-bold text-[10px] uppercase tracking-wider transition-colors shrink-0 cursor-pointer shadow-[0_0_10px_rgba(217,119,6,0.3)]"
-              >
-                Run 1-Click SQL Script
-              </button>
-            </div>
-          )}
-
           {/* View Container with Transitions */}
           <main className="flex-1 p-4 sm:p-6 lg:p-8 max-w-7xl w-full mx-auto pb-24 lg:pb-8">
             <AnimatePresence mode="wait">

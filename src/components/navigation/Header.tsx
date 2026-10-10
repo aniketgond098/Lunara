@@ -51,57 +51,33 @@ export const Header: React.FC<HeaderProps> = () => {
           </div>
 
           <div className="hidden sm:flex items-center gap-6 lg:gap-8 font-sans">
-            {/* Database / Cloud Status Pill */}
-            <div
-              onClick={() => {
-                if (hasSecretKeyError || isMissingTablesError) {
-                  setSupabaseConfigModalOpen(true);
-                } else if (!user) {
-                  setAuthModalOpen(true);
-                } else {
-                  setAccountModalOpen(true);
-                }
-              }}
-              className="cursor-pointer group"
-              title={
-                hasSecretKeyError
-                  ? 'Click to fix secret key error'
-                  : isMissingTablesError
-                  ? 'Click to run SQL schema in Supabase'
-                  : user
-                  ? 'Celestial Cloud Synced: Click to view account'
-                  : isSupabaseReady
-                  ? 'Cloud Ready: Click to sign in'
-                  : 'Local Sanctuary Mode: Click to connect Supabase'
-              }
-            >
-              <p className="text-[10px] text-slate-400 uppercase tracking-wider flex items-center gap-1 font-medium">
-                <Database className="w-3 h-3 text-[#c4b5fd] group-hover:text-white transition-colors" />
-                <span>Cloud Sync</span>
-              </p>
-              <p className="text-xs font-medium flex items-center gap-1.5 transition-colors">
-                <span
-                  className={`w-1.5 h-1.5 rounded-full ${
-                    hasSecretKeyError
-                      ? 'bg-red-400 animate-pulse'
-                      : isMissingTablesError
-                      ? 'bg-amber-400 animate-pulse'
-                      : syncStatus === 'SYNCED'
-                      ? 'bg-[#34d399] shadow-[0_0_6px_#34d399]'
-                      : syncStatus === 'SYNCING'
-                      ? 'bg-amber-400 animate-ping'
-                      : syncStatus === 'OFFLINE'
-                      ? 'bg-rose-400'
-                      : isSupabaseReady
-                      ? 'bg-[#34d399] shadow-[0_0_6px_#34d399]'
-                      : 'bg-[#818cf8]'
-                  }`}
-                />
-                <span className="text-slate-200 group-hover:text-white">
-                  {user ? 'Celestial Cloud' : isSupabaseReady ? 'Cloud Ready' : 'Local Sanctuary'}
-                </span>
-              </p>
-            </div>
+            {/* Account / Sign In Pill */}
+            {!user ? (
+              <button
+                onClick={() => setAuthModalOpen(true)}
+                className="flex items-center gap-2 px-3.5 py-1.5 rounded-xl bg-gradient-to-r from-[#2e1065] to-[#1e1b4b] hover:from-[#3b1580] hover:to-[#282463] border border-[#c4b5fd]/40 text-white transition-all text-xs font-medium shadow-[0_0_12px_rgba(167,139,250,0.2)] cursor-pointer"
+                title="Sign in with your email and password"
+              >
+                <User className="w-3.5 h-3.5 text-[#fef08a]" />
+                <span className="font-['Cinzel',serif] tracking-wider">SIGN IN</span>
+              </button>
+            ) : (
+              <div
+                onClick={() => setAccountModalOpen(true)}
+                className="cursor-pointer group flex items-center gap-2.5 px-3 py-1.5 rounded-xl bg-[#0e1330] border border-[#a78bfa]/25 hover:border-[#c4b5fd]/60 transition-all"
+                title="Click to view Account Settings"
+              >
+                <span className="w-2 h-2 rounded-full bg-emerald-400 shadow-[0_0_6px_#34d399]" />
+                <div className="text-left">
+                  <p className="text-[9px] text-[#c4b5fd] font-semibold uppercase tracking-wider font-['Cinzel',serif]">
+                    LOGGED IN
+                  </p>
+                  <p className="text-xs font-medium text-white truncate max-w-[130px]">
+                    {user.email || profile.username}
+                  </p>
+                </div>
+              </div>
+            )}
 
             {/* Level & Stardust XP Quick Peek */}
             <div
@@ -129,6 +105,18 @@ export const Header: React.FC<HeaderProps> = () => {
 
         {/* Right Action Icons: Gems, Moon Streak, Notifications, Audio */}
         <div className="flex items-center gap-1.5 sm:gap-3 font-sans shrink-0">
+          {/* Mobile Login Button when not logged in */}
+          {!user && (
+            <button
+              onClick={() => setAuthModalOpen(true)}
+              className="sm:hidden flex items-center gap-1 px-2.5 py-1 rounded-lg bg-gradient-to-r from-[#2e1065] to-[#1e1b4b] border border-[#c4b5fd]/40 text-white text-[10px] font-['Cinzel',serif] cursor-pointer shrink-0"
+              title="Sign in with your email and password"
+            >
+              <User className="w-3 h-3 text-[#fef08a]" />
+              <span>SIGN IN</span>
+            </button>
+          )}
+
           {/* Luni AI Quick Launch (Desktop/Tablet) */}
           <button
             onClick={() => setActiveTab('ASSISTANT')}
