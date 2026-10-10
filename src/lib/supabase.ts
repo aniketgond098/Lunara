@@ -91,7 +91,7 @@ if (typeof window !== 'undefined') {
 // Determine active credentials dynamically
 export const getActiveSupabaseUrl = (): string => {
   if (typeof window !== 'undefined') {
-    const stored = localStorage.getItem('web_ascend_sb_url');
+    const stored = localStorage.getItem('lunara_sb_url') || localStorage.getItem('web_ascend_sb_url');
     if (stored && stored.trim().startsWith('https://')) return stored.trim();
   }
   if (envUrl && !envUrl.includes('your-project-id') && envUrl.startsWith('https://')) {
@@ -102,7 +102,7 @@ export const getActiveSupabaseUrl = (): string => {
 
 export const getActiveSupabaseAnonKey = (): string => {
   if (typeof window !== 'undefined') {
-    const stored = localStorage.getItem('web_ascend_sb_key');
+    const stored = localStorage.getItem('lunara_sb_key') || localStorage.getItem('web_ascend_sb_key');
     if (stored && !isSecretApiKey(stored)) return stored.trim();
   }
   if (envAnonKey && !envAnonKey.includes('your-anon-public-key') && !isSecretApiKey(envAnonKey)) {
@@ -216,6 +216,8 @@ export const setManualSupabaseConfig = (url: string, key: string): { success: bo
   }
 
   if (typeof window !== 'undefined') {
+    localStorage.setItem('lunara_sb_url', trimmedUrl);
+    localStorage.setItem('lunara_sb_key', trimmedKey);
     localStorage.setItem('web_ascend_sb_url', trimmedUrl);
     localStorage.setItem('web_ascend_sb_key', trimmedKey);
   }

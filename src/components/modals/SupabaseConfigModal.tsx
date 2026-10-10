@@ -47,6 +47,7 @@ export const SupabaseConfigModal: React.FC<SupabaseConfigModalProps> = ({
   const [anonKey, setAnonKey] = useState(SUPABASE_ANON_KEY || '');
   const [copied, setCopied] = useState(false);
   const [copiedQuickFix, setCopiedQuickFix] = useState(false);
+  const [copiedVercelEnv, setCopiedVercelEnv] = useState(false);
   const [testResult, setTestResult] = useState<{
     status: 'idle' | 'testing' | 'success' | 'failed';
     isMissingTables?: boolean;
@@ -442,6 +443,13 @@ NOTIFY pgrst, 'reload schema';`;
     setTimeout(() => setCopiedQuickFix(false), 2000);
   };
 
+  const copyVercelEnv = () => {
+    const text = `VITE_SUPABASE_URL=${url.trim() || 'https://your-project-id.supabase.co'}\nVITE_SUPABASE_ANON_KEY=${anonKey.trim() || 'your-anon-public-key'}`;
+    navigator.clipboard.writeText(text);
+    setCopiedVercelEnv(true);
+    setTimeout(() => setCopiedVercelEnv(false), 2500);
+  };
+
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-black/85 backdrop-blur-md">
       <div className="relative w-full max-w-2xl rounded-3xl bg-[#090d24] border border-[#a78bfa]/35 shadow-[0_0_60px_rgba(167,139,250,0.2)] overflow-hidden flex flex-col max-h-[92vh]">
@@ -712,6 +720,44 @@ NOTIFY pgrst, 'reload schema';`;
                     )}
                   </div>
                 </div>
+              </div>
+
+              {/* Vercel Environment Variables Guide */}
+              <div className="p-4 rounded-2xl bg-[#0b0f2a] border border-[#a78bfa]/25 space-y-2.5">
+                <div className="flex items-center justify-between flex-wrap gap-2">
+                  <div className="flex items-center gap-2">
+                    <span className="w-5 h-5 rounded-lg bg-black text-white border border-white/20 flex items-center justify-center font-bold text-[10px]">
+                      ▲
+                    </span>
+                    <span className="text-xs font-bold text-white uppercase tracking-wider font-['Cinzel',serif]">
+                      DEPLOYING ON VERCEL (SYNC ALL DEVICES)
+                    </span>
+                  </div>
+                  <button
+                    type="button"
+                    onClick={copyVercelEnv}
+                    className="px-2.5 py-1 rounded-lg bg-[#2e1065] hover:bg-[#3b1580] text-[#fef08a] border border-[#a78bfa]/40 font-bold text-[11px] flex items-center gap-1.5 transition-all cursor-pointer shadow-sm"
+                  >
+                    {copiedVercelEnv ? <Check className="w-3.5 h-3.5 text-[#34d399]" /> : <Copy className="w-3.5 h-3.5" />}
+                    <span>{copiedVercelEnv ? 'COPIED FOR VERCEL!' : 'COPY VERCEL ENV'}</span>
+                  </button>
+                </div>
+                <p className="text-[11px] text-slate-300 leading-relaxed font-sans">
+                  To avoid entering credentials on every new phone or laptop, add these two environment variables in your <strong className="text-white">Vercel Project &rarr; Settings &rarr; Environment Variables</strong>:
+                </p>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-[11px] font-mono">
+                  <div className="p-2 rounded-lg bg-black/50 border border-white/10">
+                    <span className="text-slate-400 block text-[9px] uppercase font-sans">Key:</span>
+                    <span className="text-[#34d399] select-all font-bold">VITE_SUPABASE_URL</span>
+                  </div>
+                  <div className="p-2 rounded-lg bg-black/50 border border-white/10">
+                    <span className="text-slate-400 block text-[9px] uppercase font-sans">Key:</span>
+                    <span className="text-[#34d399] select-all font-bold">VITE_SUPABASE_ANON_KEY</span>
+                  </div>
+                </div>
+                <p className="text-[10px] text-slate-400 font-sans">
+                  ✦ After saving in Vercel, click <strong>Redeploy</strong> on your latest deployment (Deployments &rarr; ⋯ &rarr; Redeploy) so the build embeds these variables.
+                </p>
               </div>
 
               {testResult.status === 'success' && (
