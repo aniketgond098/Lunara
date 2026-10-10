@@ -1,0 +1,6 @@
+{
+  "name": "WEB ASCEND",
+  "description": "LUNARA — Grow Into Your Next Chapter. Celestial personal productivity, habit-tracking, and gamification system.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
