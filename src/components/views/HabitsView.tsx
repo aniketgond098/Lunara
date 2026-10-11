@@ -261,14 +261,14 @@ export const HabitsView: React.FC = () => {
                   </div>
 
                   {/* Actions (Edit, Pause, Delete) */}
-                  <div className="flex items-center gap-1 text-slate-400 opacity-80 group-hover:opacity-100 shrink-0">
+                  <div className="flex items-center gap-1 text-slate-400 opacity-100 sm:opacity-80 sm:group-hover:opacity-100 shrink-0">
                     <button
                       onClick={(e) => handleTogglePause(habit, e)}
                       className="p-1.5 rounded-lg hover:text-white hover:bg-white/10 transition-colors cursor-pointer"
                       title={habit.isActive ? 'Pause Ritual' : 'Resume Ritual'}
                     >
                       {habit.isActive ? (
-                        <PauseCircle className="w-4 h-4" />
+                        <PauseCircle className="w-4 h-4 text-slate-400 hover:text-amber-400" />
                       ) : (
                         <PlayCircle className="w-4 h-4 text-[#34d399]" />
                       )}

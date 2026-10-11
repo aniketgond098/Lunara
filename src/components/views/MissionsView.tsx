@@ -300,7 +300,7 @@ export const MissionsView: React.FC = () => {
                 </div>
 
                 {/* Edit & Delete Actions */}
-                <div className="flex items-center gap-1.5 opacity-80 group-hover:opacity-100 shrink-0">
+                <div className="flex items-center gap-1.5 opacity-100 sm:opacity-80 sm:group-hover:opacity-100 shrink-0">
                   <button
                     onClick={(e) => handleEdit(mission, e)}
                     className="p-1.5 rounded-lg hover:text-white hover:bg-white/10 transition-colors cursor-pointer text-slate-400"

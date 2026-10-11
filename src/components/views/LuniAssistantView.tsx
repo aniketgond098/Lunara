@@ -310,9 +310,9 @@ export const LuniAssistantView: React.FC = () => {
                 >
                   {msg.text}
 
-                  {/* Copy & TTS actions on hover */}
+                  {/* Copy & TTS actions */}
                   {!isUser && (
-                    <div className="flex items-center gap-2 mt-3 pt-2 border-t border-[#a78bfa]/15 text-xs text-slate-400 opacity-80 group-hover:opacity-100">
+                    <div className="flex items-center gap-2 mt-3 pt-2 border-t border-[#a78bfa]/15 text-xs text-slate-400 opacity-100 sm:opacity-80 sm:group-hover:opacity-100">
                       <button
                         onClick={() => handleCopy(msg.id, msg.text)}
                         className="hover:text-white flex items-center gap-1 transition-colors"

@@ -184,7 +184,7 @@ export const RewardsView: React.FC = () => {
                   <div className="flex items-start justify-between gap-3">
                     <CelestialMarketBadge iconKey={reward.icon} size="md" showCategory={false} />
 
-                    <div className="flex items-center gap-1.5 opacity-80 hover:opacity-100">
+                    <div className="flex items-center gap-1.5 opacity-100 sm:opacity-80 sm:hover:opacity-100">
                       <button
                         onClick={(e) => handleEdit(reward, e)}
                         className="p-1.5 rounded-lg text-slate-400 hover:text-white hover:bg-white/10 transition-colors cursor-pointer"

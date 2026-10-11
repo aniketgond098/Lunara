@@ -9,6 +9,8 @@ import {
   Clock,
   Edit2,
   Trash2,
+  PauseCircle,
+  PlayCircle,
   Bot,
   Moon,
   Sun,
@@ -378,27 +380,41 @@ export const TodayView: React.FC = () => {
                         +{habit.xpReward} XP
                       </span>
 
-                      <div className="opacity-0 group-hover:opacity-100 flex items-center gap-1 transition-opacity">
+                      <div className="flex items-center gap-1 opacity-100 sm:opacity-0 sm:group-hover:opacity-100 transition-opacity">
+                        <button
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            updateHabit(habit.id, { isActive: !habit.isActive });
+                          }}
+                          className="p-1.5 sm:p-1 text-slate-400 hover:text-white transition-colors cursor-pointer"
+                          title={habit.isActive ? 'Pause Ritual' : 'Resume Ritual'}
+                        >
+                          {habit.isActive ? (
+                            <PauseCircle className="w-3.5 h-3.5 text-slate-400 hover:text-amber-400" />
+                          ) : (
+                            <PlayCircle className="w-3.5 h-3.5 text-[#34d399]" />
+                          )}
+                        </button>
                         <button
                           onClick={(e) => {
                             e.stopPropagation();
                             setEditingHabit(habit);
                             setIsHabitModalOpen(true);
                           }}
-                          className="p-1 text-slate-400 hover:text-white"
+                          className="p-1.5 sm:p-1 text-slate-400 hover:text-white transition-colors cursor-pointer"
                           title="Edit Ritual"
                         >
-                          <Edit2 className="w-3 h-3" />
+                          <Edit2 className="w-3.5 h-3.5 sm:w-3 sm:h-3" />
                         </button>
                         <button
                           onClick={(e) => {
                             e.stopPropagation();
                             setDeletingHabit(habit);
                           }}
-                          className="p-1 text-slate-400 hover:text-rose-400"
+                          className="p-1.5 sm:p-1 text-slate-400 hover:text-rose-400 transition-colors cursor-pointer"
                           title="Delete Ritual"
                         >
-                          <Trash2 className="w-3 h-3" />
+                          <Trash2 className="w-3.5 h-3.5 sm:w-3 sm:h-3" />
                         </button>
                       </div>
                     </div>
@@ -494,27 +510,27 @@ export const TodayView: React.FC = () => {
                         +{mission.essenceReward}
                       </span>
 
-                      <div className="opacity-0 group-hover:opacity-100 flex items-center gap-1 transition-opacity">
+                      <div className="flex items-center gap-1 opacity-100 sm:opacity-0 sm:group-hover:opacity-100 transition-opacity">
                         <button
                           onClick={(e) => {
                             e.stopPropagation();
                             setEditingMission(mission);
                             setIsMissionModalOpen(true);
                           }}
-                          className="p-1 text-slate-400 hover:text-white"
+                          className="p-1.5 sm:p-1 text-slate-400 hover:text-white transition-colors cursor-pointer"
                           title="Edit Quest"
                         >
-                          <Edit2 className="w-3 h-3" />
+                          <Edit2 className="w-3.5 h-3.5 sm:w-3 sm:h-3" />
                         </button>
                         <button
                           onClick={(e) => {
                             e.stopPropagation();
                             setDeletingMission(mission);
                           }}
-                          className="p-1 text-slate-400 hover:text-rose-400"
+                          className="p-1.5 sm:p-1 text-slate-400 hover:text-rose-400 transition-colors cursor-pointer"
                           title="Delete Quest"
                         >
-                          <Trash2 className="w-3 h-3" />
+                          <Trash2 className="w-3.5 h-3.5 sm:w-3 sm:h-3" />
                         </button>
                       </div>
                     </div>

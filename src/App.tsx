@@ -54,15 +54,8 @@ const MainLayout: React.FC = () => {
   const [isOnboardingOpen, setIsOnboardingOpen] = React.useState(false);
   const [isMigrating, setIsMigrating] = React.useState(false);
 
-  React.useEffect(() => {
-    // Only prompt for stargazer name once on very first launch if not configured
-    const hasSeenOnboarding =
-      localStorage.getItem('lunara_onboarding_completed') ||
-      localStorage.getItem('web_ascend_onboarding_completed');
-    if (!hasSeenOnboarding && (profile.username === 'OPERATIVE' || profile.username === 'STARGAZER') && profile.totalXP === 0 && !user) {
-      setIsOnboardingOpen(true);
-    }
-  }, [profile.username, profile.totalXP, user]);
+  // We do not force/prompt for the user's name on fresh launch.
+  // The user can simply sign in with their account or use the app directly.
 
   const handleImport = async () => {
     setIsMigrating(true);
